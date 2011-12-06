@@ -1,8 +1,8 @@
 #!/bin/bash
+source lib/timing-functions
+
 rm -rf data
 mkdir data
-
-source lib/timing-functions
 
 begin initializing chunks
 for (( i = 0; i < 10000; ++i )); do
@@ -10,66 +10,32 @@ for (( i = 0; i < 10000; ++i )); do
 done
 end
 
-begin generating sequential data
-dd if=/dev/zero of=data/sequential bs=1M count=100 >& /dev/null
-end
+run() {
+  local n=$1
+  local seed=${2:-5811}
+  local size=$((100000 / $n))
 
-begin generating 10M random data chunks
-for (( i = 0; i < 10; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=1M count=10 >& /dev/null
-done
-end
+  begin generating $n chunks with $seed, each ${size}k
+  for (( i = 0; i < $n; ++i )); do
+    dd if=/dev/zero of=data/chunk-$((i * seed % 10000)) bs=1K count=$size >& /dev/null
+  done
+  end
 
-begin generating 1M random data chunks
-for (( i = 0; i < 100; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=1M count=1 >& /dev/null
-done
-end
+  begin generating $n chunks with $seed, each ${size}k, in parallel
+  for (( i = 0; i < $n; ++i )); do
+    dd if=/dev/zero of=data/chunk-$((i * (seed + 17) % 10000)) bs=1K count=$size >& /dev/null &
+  done
+  end
+}
 
-begin generating 100k random data chunks
-for (( i = 0; i < 1000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=100K count=1 >& /dev/null
-done
-end
+run 10000 2819
+run 1000  2819
+run 100   2819
+run 10    2819
+run 1     2819
 
-begin generating 10k random data chunks
-for (( i = 0; i < 10000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=10K count=1 >& /dev/null
-done
-end
-
-begin generating 1k random data chunks
-for (( i = 0; i < 100000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$((i % 10000)) bs=1K count=1 >& /dev/null
-done
-end
-
-begin generating 10M random data chunks in parallel
-for (( i = 0; i < 10; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=1M count=10 >& /dev/null &
-done
-end
-
-begin generating 1M random data chunks in parallel
-for (( i = 0; i < 100; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=1M count=1 >& /dev/null &
-done
-end
-
-begin generating 100k random data chunks in parallel
-for (( i = 0; i < 1000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=100K count=1 >& /dev/null &
-done
-end
-
-begin generating 10k random data chunks in parallel
-for (( i = 0; i < 10000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=10K count=1 >& /dev/null &
-done
-end
-
-begin generating 1k random data chunks in parallel
-for (( i = 0; i < 100000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$((i % 10000)) bs=1K count=1 >& /dev/null &
-done
-end
+run 10000 5131
+run 1000  5131
+run 100   5131
+run 10    5131
+run 1     5131
