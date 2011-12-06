@@ -1,0 +1,13 @@
+#!/bin/bash
+
+begin() {
+  timestamp=$(date +%s%N)
+  echo -n "$*: "
+}
+
+end() {
+  wait
+  sync
+  local endtime=$(date +%s%N)
+  echo $(((endtime - timestamp) / 1000000))ms
+}

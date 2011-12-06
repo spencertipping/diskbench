@@ -1,0 +1,18 @@
+#!/bin/bash
+source lib/timing-functions
+
+begin sequential read
+md5sum data/sequential >& /dev/null
+end
+
+begin random reads
+for file in data/chunk-*; do
+  md5sum $file >& /dev/null
+done
+end
+
+begin random reads parallel
+for file in data/chunk-*; do
+  md5sum $file >& /dev/null &
+done
+end
