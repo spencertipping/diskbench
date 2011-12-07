@@ -1,8 +1,11 @@
 #!/bin/bash
 
 flush-cache() {
+  # Writes a 1G area of memory and then reads it. If Linux uses LRU, then this
+  # should empty any cached pages from disk (my machine has 1G of memory).
   begin flushing disk cache
-  dd if=/dev/zero of=data/flush-cache bs=1M count=1000 >& /dev/null
+  dd if=/dev/zero of=data/flush-cache bs=1M count=1024 >& /dev/null
+  md5sum data/flush-cache >& /dev/null
   rm data/flush-cache
   end
 }
