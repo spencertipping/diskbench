@@ -7,13 +7,13 @@ begin sequential read
 cat data/sequential >& /dev/null
 end
 
-flush-cache
-begin quasi-sequential reads without process overhead
-cat data/chunk-* >& /dev/null
-end
-
 random_list="$(ls data/chunk-* | shuf)"
 flush-cache
 begin random reads without process overhead
 cat $random_list >& /dev/null
+end
+
+flush-cache
+begin quasi-sequential reads without process overhead
+cat data/chunk-* >& /dev/null
 end

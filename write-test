@@ -5,8 +5,8 @@ rm -rf data
 mkdir data
 
 begin initializing chunks
-for (( i = 0; i < 10000; ++i )); do
-  dd if=/dev/zero of=data/chunk-$i bs=1M count=1 >& /dev/null
+for (( i = 0; i < 100000; ++i )); do
+  dd if=/dev/zero of=data/chunk-$i bs=1K count=1 >& /dev/null
 done
 end
 
@@ -28,14 +28,13 @@ run() {
   end
 }
 
-run 10000 2819
-run 1000  2819
-run 100   2819
-run 10    2819
-run 1     2819
+run 100000 2819
+run 10000  2819
+run 1000   2819
+run 100    2819
+run 10     2819
+run 1      2819
 
-run 10000 5131
-run 1000  5131
-run 100   5131
-run 10    5131
-run 1     5131
+begin generating sequential file from all chunks
+cat data/chunk-* > data/sequential
+end
