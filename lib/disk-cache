@@ -2,7 +2,7 @@
 
 flush-cache() {
   begin flushing disk cache
-  dd if=/dev/zero of=data/flush-cache bs=1M count=1000
+  dd if=/dev/zero of=data/flush-cache bs=1M count=1000 >& /dev/null
   rm data/flush-cache
   end
 }
