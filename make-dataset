@@ -1,0 +1,19 @@
+#!/bin/bash
+# Creates a 1G data set, where each file is so large. Usage:
+# make-dataset 5        # creates 5k files
+
+source lib/timing-functions
+
+filesize=$1
+filecount=$((1048576 / filesize))
+
+begin nuking previous dataset
+rm -rf dataset-$filesize
+end $((1024 * 1048576))
+mkdir dataset-$filesize
+
+begin creating dataset
+for (( i = 0; i < filecount; ++i )); do
+  dd if=/dev/zero of=dataset-$filesize/chunk-$i bs=1K count=$filesize >& /dev/null
+done
+end $((1024 * 1048576))

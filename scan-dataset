@@ -1,0 +1,9 @@
+#!/bin/bash
+# Reads all of the data within a dataset.
+
+source lib/timing-functions
+
+dataset=$1
+
+begin reading all data within dataset $1
+end $(cat dataset-$dataset/chunk-* | wc -c)
