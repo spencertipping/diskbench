@@ -6,8 +6,11 @@ begin() {
 }
 
 end() {
+  bytes=$1
   wait
   sync
   local endtime=$(date +%s%N)
-  echo $(((endtime - timestamp) / 1000000))ms
+  local milliseconds=$(((endtime - timestamp) / 1000000))
+  local bytes_per_millisecond=$((bytes / milliseconds))
+  echo ${duration}ms = ${bytes_per_millisecond}k/sec
 }
