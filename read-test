@@ -2,15 +2,15 @@
 source lib/timing-functions
 source lib/disk-cache
 
-flush-cache
+#flush-cache
 begin sequential read
-end $(data/sequential | wc -c)
+end $(cat data/sequential | wc -c)
 
 random_list="$(ls data/chunk-* | shuf)"
-flush-cache
+#flush-cache
 begin random reads without process overhead
 end $(cat $random_list | wc -c)
 
-flush-cache
+#flush-cache
 begin quasi-sequential reads without process overhead
 end $(cat data/chunk-* | wc -c)

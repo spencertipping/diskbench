@@ -12,5 +12,5 @@ end() {
   local endtime=$(date +%s%N)
   local milliseconds=$(((endtime - timestamp) / 1000000))
   local bytes_per_millisecond=$((bytes / milliseconds))
-  echo ${duration}ms = ${bytes_per_millisecond}k/sec
+  echo ${milliseconds}ms = ${bytes_per_millisecond}k/sec
 }
