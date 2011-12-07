@@ -1,16 +1,19 @@
 #!/bin/bash
 source lib/timing-functions
+source lib/disk-cache
 
+flush-cache
 begin sequential read
 md5sum data/sequential >& /dev/null
 end
 
-begin random reads without process overhead
+flush-cache
+begin quasi-sequential reads without process overhead
 md5sum data/chunk-* >& /dev/null
 end
 
-begin random reads
-for file in data/chunk-*; do
-  md5sum $file >& /dev/null
-done
+random_list="$(ls data/chunk-* | shuf)"
+flush-cache
+begin random reads without process overhead
+md5sum $random_list >& /dev/null
 end
