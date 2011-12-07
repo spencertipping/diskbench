@@ -5,5 +5,8 @@ source lib/timing-functions
 
 dataset=$1
 
+begin caching file list
+end $(ls -li dataset-$dataset/chunk-* | wc -c)
+
 begin reading all data within dataset $1
-end $(cat dataset-$dataset/chunk-* | wc -c)
+end $(cat $(ls dataset-$dataset/chunk-* | shuf) | wc -c)
