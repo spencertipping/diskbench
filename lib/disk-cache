@@ -1,6 +1,6 @@
 #!/bin/bash
 
-flush-disk-cache() {
+flush-cache() {
   begin flushing disk cache
   dd if=/dev/zero of=data/flush-cache bs=1M count=1000
   rm data/flush-cache
